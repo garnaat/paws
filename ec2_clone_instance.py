@@ -5,7 +5,7 @@ import base64
 
 def clone_instance(instance):
     """
-    Make an clone of an existing Instance object.
+    Make a clone of an existing Instance object.
 
     instance      The Instance object to clone.
     """
@@ -17,7 +17,8 @@ def clone_instance(instance):
         user_data = instance.get_attribute('userData')['userData']
         # user_data comes back base64 encoded.  Need to decode it so it
         # can get re-encoded by run_instance !
-        user_data = base64.b64decode(user_data)
+        if user_data:
+            user_data = base64.b64decode(user_data)
         new_bdm = BlockDeviceMapping()
         for dev in instance.block_device_mapping:
             # if this entry is about the root device, skip it
