@@ -30,7 +30,7 @@ def configure_mfa_delete(bucket_name,
     # Make change to configuration.  This method takes a tuple
     # consisting of the mfa serial # and token.
     bucket.configure_versioning(versioning=versioning, mfa_delete=enable,
-                                (mfa_serial_number, mfa_token))
+                                mfa_token=(mfa_serial_number, mfa_token))
 
     # Update the status of versioning and print the new value.
     config = bucket.get_versioning_status()
