@@ -75,6 +75,13 @@ def launch_instance(ami='ami-7341831a',
             print 'Creating keypair: %s' % key_name
             # Create an SSH key to use when logging into instances.
             key = ec2.create_key_pair(key_name)
+
+            # Make sure the specified key_dir actually exists.
+            # If not, create it.
+            key_dir = os.expanduser(key_dir)
+            key_dir = os.expandvars(key_dir)
+            if not os.path.isdir(key_dir):
+                os.mkdir(key_dir, 0700)
             
             # AWS will store the public key but the private key is
             # generated and returned and needs to be stored locally.
