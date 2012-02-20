@@ -24,9 +24,10 @@ instance = reservations[0].instances[0]
 instance.add_tag('paws')
 
 # We can now ask for all instances that have the tag name "paws"
-# and get our instance back again.
+# and get our instance back again.  To do that, we need to use
+# the special tag filter name, tag-key.
 
-reservations = ec2.get_all_instances(filters={'paws' : None})
+reservations = ec2.get_all_instances(filters={'tag-key': 'paws'})
 new_instance = reservations[0].instances[0]
 assert new_instance.id == instance.id
 
