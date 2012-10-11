@@ -1,6 +1,7 @@
 import os
 import boto
 
+
 def easy_alarm(instance_id,
                alarm_name,
                email_addresses,
@@ -9,7 +10,7 @@ def easy_alarm(instance_id,
                threshold,
                period,
                eval_periods,
-               statistics):
+               statistic):
     """
     Create a CloudWatch alarm for a given instance.  You can choose
     the metric and dimension you want to associate with the alarm
@@ -55,13 +56,13 @@ def easy_alarm(instance_id,
 
     # Make sure the instance in question exists and
     # is being monitored with CloudWatch.
-    rs = ec2.get_all_instances(filters={'instance-id', instance_id})
+    rs = ec2.get_all_instances(filters={'instance-id': instance_id})
     if len(rs) != 1:
         raise ValueError('Unable to find instance: %s' % instance_id)
 
     instance = rs[0].instances[0]
     instance.monitor()
-    
+
     # Create the SNS Topic
     topic_name = 'CWAlarm-%s' % alarm_name
     print 'Creating SNS topic: %s' % topic_name
@@ -75,7 +76,7 @@ def easy_alarm(instance_id,
         sns.subscribe(topic_arn, 'email', addr)
 
     # Now find the Metric we want to be notified about
-    metric = cw.list_metrics(dimensions={'InstanceId':instance_id},
+    metric = cw.list_metrics(dimensions={'InstanceId': instance_id},
                              metric_name=metric_name)[0]
     print 'Found: %s' % metric
 
@@ -83,7 +84,7 @@ def easy_alarm(instance_id,
     print 'Creating alarm'
     alarm = metric.create_alarm(name=alarm_name, comparison=comparison,
                                 threshold=threshold, period=period,
-                                evaluationn_periods=eval_periods,
-                                statistics=statistics,
+                                evaluation_periods=eval_periods,
+                                statistic=statistic,
                                 alarm_actions=[topic_arn],
                                 ok_actions=[topic_arn])
